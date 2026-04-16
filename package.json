@@ -1,0 +1,45 @@
+{
+  "name": "@pavelhopson/retry-http",
+  "version": "1.0.0",
+  "description": "Exponential backoff retry for HTTP requests — configurable attempts, delays, jitter, shouldRetry predicate, AbortSignal support.",
+  "type": "module",
+  "main": "dist/retry.js",
+  "types": "dist/retry.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/retry.js",
+      "types": "./dist/retry.d.ts"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "prepublishOnly": "npm run build && npm test"
+  },
+  "keywords": [
+    "retry",
+    "http",
+    "fetch",
+    "backoff",
+    "exponential",
+    "jitter",
+    "resilience",
+    "abort"
+  ],
+  "author": "Pavel Hopson <man773608@gmail.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/PavelHopson/retry-http"
+  },
+  "devDependencies": {
+    "typescript": "~5.8.2",
+    "vitest": "^4.1.4"
+  }
+}
