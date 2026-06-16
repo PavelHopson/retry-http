@@ -1,5 +1,5 @@
 {
-  "name": "@pavelhopson/retry-http",
+  "name": "retry-http",
   "version": "1.0.0",
   "description": "Exponential backoff retry for HTTP requests — configurable attempts, delays, jitter, shouldRetry predicate, AbortSignal support.",
   "type": "module",
