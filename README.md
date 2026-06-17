@@ -16,13 +16,13 @@ Exponential backoff retry for HTTP requests. Zero dependencies. TypeScript-first
 ## Install
 
 ```bash
-npm install retry-http
+npm install @pavelhopson/retry-http
 ```
 
 ## Usage
 
 ```typescript
-import { retry, isRetryableHttpStatus, RetryError } from 'retry-http';
+import { retry, isRetryableHttpStatus, RetryError } from '@pavelhopson/retry-http';
 
 // Basic usage — retry a fetch call up to 3 times
 const response = await retry(
