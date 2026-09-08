@@ -1,6 +1,45 @@
 # retry-http
 
-Exponential backoff retry for HTTP requests. Zero dependencies. TypeScript-first.
+![retry-http: Запрос → Повтор → Ответ](docs/assets/repository-cover.svg)
+
+**TypeScript-библиотека.** Небольшая библиотека HTTP-повторов с backoff для устойчивых сетевых клиентов.
+
+<!-- repository-guide:start -->
+[Первый запуск](#readme-start) · [Что внутри](#readme-map) · [Путеводитель](docs/repository-guide.md#start) · [Карта кода](docs/repository-guide.md#map) · [Проверки](docs/repository-guide.md#checks) · [Границы и права](docs/repository-guide.md#boundaries)
+
+<a id="readme-map"></a>
+
+## Проект за минуту
+
+- **[Retry API](<src/retry.ts>)** — Backoff, jitter, отмена и условия повторного запроса.
+- **[Поведение под тестом](<src/retry.test.ts>)** — Проверки повторов, задержек и обработки ошибок.
+- **[Пакет](<package.json>)** — ESM export, декларации типов и команды сборки.
+
+<a id="readme-start"></a>
+
+## Начать локально
+
+**Среда:** Node.js и npm. **Источник:** [package.json](<package.json>).
+
+Из корня клонированного репозитория:
+
+```bash
+npm ci
+npm run test
+```
+
+Это библиотека: dev-сервера нет. После установки тесты запускаются локально; сборка пакета — `npm run build`.
+
+<details>
+<summary><strong>Перед первым запуском и изменением кода</strong></summary>
+
+- Команды сверены с исходниками 8 сентября 2026. Это инструкция, а не отметка об успешном запуске или текущем production.
+- Установка зависимостей может обращаться в registry и выполнять lifecycle scripts. Используйте отдельную рабочую среду и демонстрационные данные.
+- Повтор изменяющего запроса требует идемпотентности; retry не заменяет timeout, отмену и ограничения нагрузки.
+
+
+</details>
+<!-- repository-guide:end -->
 
 ## Features
 
@@ -96,7 +135,7 @@ Exported for testing — computes the delay for a given attempt.
 
 ## Provenance
 
-This module was developed inside [Eclipse Valhalla](https://github.com/PavelHopson/Eclipse-Valhalla) (Sprint 1), then ported **byte-identical** to [CryptoPulse](https://github.com/PavelHopson/CryptoPulse) and [eclipse-ai-hub](https://github.com/PavelHopson/eclipse-ai-hub) — 3 consumers, zero divergence, 26 tests passing on first run in each project. This npm package is the natural extraction.
+Модуль выделен из разработки [Eclipse Valhalla](https://github.com/PavelHopson/Eclipse-Valhalla). Связанные реализации есть в [CryptoPulse](https://github.com/PavelHopson/CryptoPulse) и [Eclipse AI Hub](https://github.com/PavelHopson/eclipse-ai-hub). Это история происхождения, а не доказательство побайтового совпадения текущих версий. Актуальное поведение пакета проверяется его собственными тестами в [src/retry.test.ts](src/retry.test.ts).
 
 ## License
 
