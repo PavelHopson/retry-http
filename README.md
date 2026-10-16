@@ -1,5 +1,9 @@
 # retry-http
 
+<!-- project-links:start -->
+[Документация](docs/repository-guide.md) · [Код](https://github.com/PavelHopson/retry-http/tree/main) · [История изменений](https://github.com/PavelHopson/retry-http/commits/main/)
+<!-- project-links:end -->
+
 ![retry-http: Запрос → Повтор → Ответ](docs/assets/repository-cover.svg)
 
 **TypeScript-библиотека.** Небольшая библиотека HTTP-повторов с backoff для устойчивых сетевых клиентов.
@@ -41,24 +45,30 @@ npm run test
 </details>
 <!-- repository-guide:end -->
 
-## Features
+<a id="features"></a>
 
-- Configurable max attempts, initial delay, max delay, and backoff factor
-- Jitter (±50%) to prevent thundering-herd on shared rate limits
-- `shouldRetry` predicate for conditional retry (e.g., only on 429/5xx)
-- `onRetry` callback for telemetry / logging hooks
-- `AbortSignal` support for cancellation
-- `RetryError` class preserving attempt count and last error
-- `isRetryableHttpStatus` helper (408, 425, 429, 500–599)
-- Tree-shakable ESM, ships with type declarations
+## Возможности
 
-## Install
+- Настраиваемые число попыток, начальная и максимальная задержка, коэффициент backoff
+- Jitter (±50%) для распределения повторов во времени
+- Предикат `shouldRetry` для выбора повторяемых ошибок, например 429/5xx
+- Обработчик `onRetry` для метрик и журналов
+- Отмена через `AbortSignal`
+- Класс `RetryError` с числом попыток и последней ошибкой
+- Функция `isRetryableHttpStatus` для кодов 408, 425, 429 и 500–599
+- ESM с поддержкой tree shaking и декларациями типов
+
+<a id="install"></a>
+
+## Установка
 
 ```bash
 npm install @pavelhopson/retry-http
 ```
 
-## Usage
+<a id="usage"></a>
+
+## Использование
 
 ```typescript
 import { retry, isRetryableHttpStatus, RetryError } from '@pavelhopson/retry-http';
@@ -108,35 +118,39 @@ try {
 
 ### `retry<T>(fn, options?): Promise<T>`
 
-| Option | Type | Default | Description |
+| Параметр | Тип | По умолчанию | Назначение |
 |---|---|---|---|
-| `maxAttempts` | `number` | `3` | Total attempts (including first) |
-| `initialDelayMs` | `number` | `300` | Delay before first retry |
-| `maxDelayMs` | `number` | `10000` | Cap on computed delay |
-| `backoffFactor` | `number` | `2` | Multiplier per attempt |
-| `jitter` | `boolean` | `true` | Add ±50% randomness |
-| `shouldRetry` | `(error, attempt) => boolean` | `() => true` | Return false to stop early |
-| `onRetry` | `(error, attempt, delayMs) => void` | — | Hook for logging |
-| `signal` | `AbortSignal` | — | Cancel retries |
+| `maxAttempts` | `number` | `3` | Всего попыток, включая первую |
+| `initialDelayMs` | `number` | `300` | Задержка перед первым повтором |
+| `maxDelayMs` | `number` | `10000` | Верхняя граница задержки |
+| `backoffFactor` | `number` | `2` | Множитель для каждой попытки |
+| `jitter` | `boolean` | `true` | Случайное отклонение ±50% |
+| `shouldRetry` | `(error, attempt) => boolean` | `() => true` | Возвращает false для прекращения повторов |
+| `onRetry` | `(error, attempt, delayMs) => void` | — | Обработчик для журналирования |
+| `signal` | `AbortSignal` | — | Отмена повторов |
 
 ### `isRetryableHttpStatus(status: number): boolean`
 
-Returns `true` for HTTP 408, 425, 429, and 500–599.
+Возвращает `true` для HTTP 408, 425, 429 и 500–599.
 
 ### `RetryError`
 
-Thrown when all attempts are exhausted. Properties:
-- `.attempts: number` — how many attempts were made
-- `.lastError: unknown` — the error from the final attempt
+Ошибка после исчерпания попыток. Свойства:
+- `.attempts: number` — число выполненных попыток
+- `.lastError: unknown` — ошибка последней попытки
 
 ### `computeDelay(attempt, initialDelayMs, backoffFactor, maxDelayMs, jitter): number`
 
-Exported for testing — computes the delay for a given attempt.
+Вычисляет задержку для заданной попытки; экспортируется для тестирования.
 
-## Provenance
+<a id="provenance"></a>
+
+## Происхождение
 
 Модуль выделен из разработки [Eclipse Valhalla](https://github.com/PavelHopson/Eclipse-Valhalla). Связанные реализации есть в [CryptoPulse](https://github.com/PavelHopson/CryptoPulse) и [Eclipse AI Hub](https://github.com/PavelHopson/eclipse-ai-hub). Это история происхождения, а не доказательство побайтового совпадения текущих версий. Актуальное поведение пакета проверяется его собственными тестами в [src/retry.test.ts](src/retry.test.ts).
 
-## License
+<a id="license"></a>
+
+## Лицензия
 
 MIT
