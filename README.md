@@ -13,7 +13,7 @@
 
 [Главная Eclipse Forge](https://eclipse-forge.ru/) · [Eclipse Library](https://library.eclipse-forge.ru/) · [Eclipse DnD Forge](https://dnd.eclipse-forge.ru/)
 
-Исходный код: [Eclipse Forge Landing](https://github.com/PavelHopson/Eclipse-forge-website) · [Eclipse Chat](https://github.com/PavelHopson/eclipse-chat) · [Eclipse Connect](https://github.com/PavelHopson/eclipse-connect) · [Eclipse Library](https://github.com/PavelHopson/eclipse-library) · [Eclipse AI Hub](https://github.com/PavelHopson/eclipse-ai-hub) · [Eclipse Ultron / Sentinel](https://github.com/PavelHopson/eclipse-hopson-sentinel) · [Eclipse Webclaw](https://github.com/PavelHopson/Eclipse-webclaw) · [Eclipse DnD Forge](https://github.com/PavelHopson/eclipse-dnd-forge) · [Finflow](https://github.com/PavelHopson/finflow) · [Eclipse Media](https://github.com/PavelHopson/eclipse-media) · [Shotforge](https://github.com/PavelHopson/shotforge) · [Text2Image](https://github.com/PavelHopson/Text2Image) · [Educator AI](https://github.com/PavelHopson/Educator-AI) · [@pavelhopson/retry-http](https://github.com/PavelHopson/retry-http)
+Исходный код: [Eclipse Forge Landing](https://github.com/PavelHopson/Eclipse-forge-website) · [Eclipse Chat](https://github.com/PavelHopson/eclipse-chat) · [Eclipse Library](https://github.com/PavelHopson/eclipse-library) · [Eclipse AI Hub](https://github.com/PavelHopson/eclipse-ai-hub) · [Eclipse Sentinel](https://github.com/PavelHopson/eclipse-hopson-sentinel) · [Eclipse Webclaw](https://github.com/PavelHopson/Eclipse-webclaw) · [Eclipse DnD Forge](https://github.com/PavelHopson/eclipse-dnd-forge) · [Finflow](https://github.com/PavelHopson/finflow) · [Eclipse Media](https://github.com/PavelHopson/eclipse-media) · [Shotforge](https://github.com/PavelHopson/shotforge) · [Text2Image](https://github.com/PavelHopson/Text2Image) · [Educator AI](https://github.com/PavelHopson/Educator-AI) · [@pavelhopson/retry-http](https://github.com/PavelHopson/retry-http)
 <!-- eclipse-forge-projects:end -->
 
 <!-- repository-guide:start -->
@@ -53,30 +53,24 @@ npm run test
 </details>
 <!-- repository-guide:end -->
 
-<a id="features"></a>
+## Features
 
-## Возможности
+- Configurable max attempts, initial delay, max delay, and backoff factor
+- Jitter (±50%) to prevent thundering-herd on shared rate limits
+- `shouldRetry` predicate for conditional retry (e.g., only on 429/5xx)
+- `onRetry` callback for telemetry / logging hooks
+- `AbortSignal` support for cancellation
+- `RetryError` class preserving attempt count and last error
+- `isRetryableHttpStatus` helper (408, 425, 429, 500–599)
+- Tree-shakable ESM, ships with type declarations
 
-- Настраиваемые число попыток, начальная и максимальная задержка, коэффициент backoff
-- Jitter (±50%) для распределения повторов во времени
-- Предикат `shouldRetry` для выбора повторяемых ошибок, например 429/5xx
-- Обработчик `onRetry` для метрик и журналов
-- Отмена через `AbortSignal`
-- Класс `RetryError` с числом попыток и последней ошибкой
-- Функция `isRetryableHttpStatus` для кодов 408, 425, 429 и 500–599
-- ESM с поддержкой tree shaking и декларациями типов
-
-<a id="install"></a>
-
-## Установка
+## Install
 
 ```bash
 npm install @pavelhopson/retry-http
 ```
 
-<a id="usage"></a>
-
-## Использование
+## Usage
 
 ```typescript
 import { retry, isRetryableHttpStatus, RetryError } from '@pavelhopson/retry-http';
@@ -126,39 +120,35 @@ try {
 
 ### `retry<T>(fn, options?): Promise<T>`
 
-| Параметр | Тип | По умолчанию | Назначение |
+| Option | Type | Default | Description |
 |---|---|---|---|
-| `maxAttempts` | `number` | `3` | Всего попыток, включая первую |
-| `initialDelayMs` | `number` | `300` | Задержка перед первым повтором |
-| `maxDelayMs` | `number` | `10000` | Верхняя граница задержки |
-| `backoffFactor` | `number` | `2` | Множитель для каждой попытки |
-| `jitter` | `boolean` | `true` | Случайное отклонение ±50% |
-| `shouldRetry` | `(error, attempt) => boolean` | `() => true` | Возвращает false для прекращения повторов |
-| `onRetry` | `(error, attempt, delayMs) => void` | — | Обработчик для журналирования |
-| `signal` | `AbortSignal` | — | Отмена повторов |
+| `maxAttempts` | `number` | `3` | Total attempts (including first) |
+| `initialDelayMs` | `number` | `300` | Delay before first retry |
+| `maxDelayMs` | `number` | `10000` | Cap on computed delay |
+| `backoffFactor` | `number` | `2` | Multiplier per attempt |
+| `jitter` | `boolean` | `true` | Add ±50% randomness |
+| `shouldRetry` | `(error, attempt) => boolean` | `() => true` | Return false to stop early |
+| `onRetry` | `(error, attempt, delayMs) => void` | — | Hook for logging |
+| `signal` | `AbortSignal` | — | Cancel retries |
 
 ### `isRetryableHttpStatus(status: number): boolean`
 
-Возвращает `true` для HTTP 408, 425, 429 и 500–599.
+Returns `true` for HTTP 408, 425, 429, and 500–599.
 
 ### `RetryError`
 
-Ошибка после исчерпания попыток. Свойства:
-- `.attempts: number` — число выполненных попыток
-- `.lastError: unknown` — ошибка последней попытки
+Thrown when all attempts are exhausted. Properties:
+- `.attempts: number` — how many attempts were made
+- `.lastError: unknown` — the error from the final attempt
 
 ### `computeDelay(attempt, initialDelayMs, backoffFactor, maxDelayMs, jitter): number`
 
-Вычисляет задержку для заданной попытки; экспортируется для тестирования.
+Exported for testing — computes the delay for a given attempt.
 
-<a id="provenance"></a>
-
-## Происхождение
+## Provenance
 
 Модуль выделен из разработки [Eclipse Valhalla](https://github.com/PavelHopson/Eclipse-Valhalla). Связанные реализации есть в [CryptoPulse](https://github.com/PavelHopson/CryptoPulse) и [Eclipse AI Hub](https://github.com/PavelHopson/eclipse-ai-hub). Это история происхождения, а не доказательство побайтового совпадения текущих версий. Актуальное поведение пакета проверяется его собственными тестами в [src/retry.test.ts](src/retry.test.ts).
 
-<a id="license"></a>
-
-## Лицензия
+## License
 
 MIT
